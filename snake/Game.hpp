@@ -11,11 +11,11 @@
 
 class Game{
 	Square square;
-	bool gameover, exit;
 	Apple *apple;
 	Snake snake;
 	Scoreboard scoreboard;
-	int score = 0, highscore; 
+	bool m_gameover, m_exit;
+	int m_score = 0, m_highscore; 
 	void createapple();
 	void createnextpiece(SnakePiece next);
 	void destroyapple();

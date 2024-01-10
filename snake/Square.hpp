@@ -4,89 +4,51 @@
 
 class Square{
 	WINDOW *win;
-	int height, width, startrow, startcol;
-	int timeout;
+	int m_height, m_width, m_startrow, m_startcol, m_xres, m_yres, m_timeout = 300;
 public:
-	Square(){initialize(0, 0, 300);}  //default
-	
-	Square(int height, int width, int speed){
-		initialize(height, width, speed);
+	Square() {}
+	Square(int h, int w) : m_height(h), m_width(w){
+		initialize();
 	}
-	
-	void initialize(int height, int width, int speed){
+	void initialize(){
 		initscr();
 		noecho();
 		curs_set(0);
-		int xres, yres;
-		getmaxyx(stdscr, yres, xres);
-		this->height = height;  
-		this->width = width;
+		getmaxyx(stdscr, m_yres, m_xres);
 		
-		startrow = (yres / 2) - (height / 2);
-		startcol = (xres / 2) - (width / 2);
+		m_startrow = (m_yres / 2) - (m_height / 2);
+		m_startcol = (m_xres / 2) - (m_width / 2);
 		
-		win = newwin(height, width, startrow, startcol);
+		win = newwin(m_height, m_width, m_startrow, m_startcol);
 		
-		timeout = speed;
-		settimeout(speed);
+		settimeout(m_timeout);
 		// strzałki są wyłączone by default
 		keypad(win, true);
 	}
-
 	void drawsquare(){
 		clear();
 		refresh();    //automatyzacja goes brrrr
 	}
-
-	void addbox(){
-		box(win, 0, 0);
-	}
-	
 	void add(Draw draw){
 		addsign(draw.gety(), draw.getx(), draw.getsign());
 	}
-	
 	void addsign(int y, int x, chtype ch){
 		mvwaddch(win, y, x, ch);
 	}
-	
-	chtype getinput(){			
-		return wgetch(win);
-	}
-	
 	void getcoordinates(int &y, int &x){
-		while((mvwinch(win, y = rand() % height, x = rand() % width)) != ' '); //losowe puste miejsce dla jabłka
+		while((mvwinch(win, y = rand() % m_height, x = rand() % m_width)) != ' '); //losowe puste miejsce dla jabłka
 	}
-	
-	chtype getchar(int y, int x){
-		return mvwinch(win, y, x);
-	}
-	void clear(){
+		void clear(){
 		wclear(win);
 		addbox();
 	}
-	
-	void refresh(){
-	wrefresh(win);
-	}
-	
-	void settimeout(int speed){
-		wtimeout(win, speed);   // automatyczne odświeżanie się ekranu / prędkość gry
-	}
-	
-	int getstartrow(){
-		return startrow;
-	}
-	
-	int getstartcol(){
-		return startcol;
-	}
-	
-	int gettimeout(){
-		return timeout;
-	}
-	
-	void changetimeout(int speed){
-		timeout = speed;
-	}
+	chtype getinput()               {return wgetch(win);}
+	void addbox()                   {box(win, 0, 0);}
+	chtype getchar(int y, int x)    {return mvwinch(win, y, x);}
+	void refresh()                  {wrefresh(win);}
+	void settimeout(int speed)      {wtimeout(win, speed);}
+	int getstartrow()	            {return m_startrow;}
+	int getstartcol()	            {return m_startcol;}
+	int gettimeout()	            {return m_timeout;}
+	void changetimeout(int speed)	{m_timeout = speed;}
 };

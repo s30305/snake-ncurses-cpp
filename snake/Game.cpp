@@ -1,4 +1,5 @@
 #include "Game.hpp"
+
 void Game::createapple(){
 	int y, x;
 	square.getcoordinates(y, x);
@@ -21,7 +22,7 @@ void Game::createnextpiece(SnakePiece next){
 				break;
 			}
 			default:            //kazdy inny przypadek to kolizja
-				gameover = true;
+				m_gameover = true;
 				break;
 		}
 	}
@@ -32,14 +33,14 @@ void Game::createnextpiece(SnakePiece next){
 void Game::destroyapple(){
 	delete apple;
 	apple = NULL;
-	score += 1;
+	m_score += 1;
 	if ((square.gettimeout() > 50))
 		square.changetimeout(square.gettimeout() - 10);
-	scoreboard.updatescore(score);
+	scoreboard.updatescore(m_score);
 }
 
-Game::Game(int height, int width, int hs, bool p, bool v) :highscore(hs){
-	square = Square(height, width, 300);
+Game::Game(int height, int width, int hs, bool p, bool v) :m_highscore(hs){
+	square = Square(height, width);
 	int sbrow = square.getstartrow() + height;
 	int sbcol = square.getstartcol();
 	scoreboard = Scoreboard(width, sbrow, sbcol);
@@ -49,12 +50,12 @@ Game::Game(int height, int width, int hs, bool p, bool v) :highscore(hs){
 void Game::initialize(bool plus, bool vase){
 	apple = NULL;
 	square.drawsquare();
-	scoreboard.initialize(score, highscore);
+	scoreboard.initialize(m_score, m_highscore);
 
-	gameover = false;
-	exit = false;
-	//pozwala na uzycie rand
-	srand(time(NULL));
+	m_gameover = false;
+	m_exit = false;
+
+	srand(time(NULL));	//bez tego rand() nie jest losowy
 
 	snake.setdirection(down);
 
@@ -116,8 +117,8 @@ void Game::useinput(){
 			break;
 
 		case 'x':
-			exit = true;
-			gameover = true;
+			m_exit = true;
+			m_gameover = true;
 			break;
 
 		default:
@@ -138,10 +139,6 @@ void Game::redraw(){
 	scoreboard.refresh();
 }
 
-bool Game::isover(){
-	return gameover;
-}
-
-bool Game::isexit(){return exit;}
-
-int Game::getscore(){return score;}
+bool Game::isover()  {return m_gameover;}
+bool Game::isexit()  {return m_exit;}
+int Game::getscore() {return m_score;}

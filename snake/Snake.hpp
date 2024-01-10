@@ -28,17 +28,12 @@ class Snake{
 	Direction cur_direction;
 	
 public:
-	Snake(){cur_direction = down;}
-	
-	void addpiece(SnakePiece piece){prev_pieces.push(piece);}
-	
-	void removepiece(){prev_pieces.pop();}
-	
-	SnakePiece tail(){return prev_pieces.front();}
-	
-	SnakePiece head(){return prev_pieces.back();}
-	
-	Direction getdirection(){return cur_direction;}
+	Snake()                          {cur_direction = down;}
+	void addpiece(SnakePiece piece)  {prev_pieces.push(piece);}
+	void removepiece()               {prev_pieces.pop();}
+	SnakePiece tail()                {return prev_pieces.front();}
+	SnakePiece head()                {return prev_pieces.back();}
+	Direction getdirection()         {return cur_direction;}
 	
 	void setdirection(Direction d){
 		if (cur_direction + d != 0)

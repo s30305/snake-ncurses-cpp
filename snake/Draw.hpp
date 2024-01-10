@@ -12,9 +12,9 @@ class Draw{
 			this->x = x;
 			this->sign = ch;
 		}
-		int getx(){return x;}
-		int gety(){return y;}
-		chtype getsign(){return sign;}
+		int getx()       {return x;}
+		int gety()       {return y;}
+		chtype getsign() {return sign;}
 	protected:
 		int y, x;
 		chtype sign;
