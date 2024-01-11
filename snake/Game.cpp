@@ -1,75 +1,30 @@
 #include "Game.hpp"
 
-void Game::createapple(){
-	int y, x;
-	square.getcoordinates(y, x);
-	apple = new Apple(y, x);
-	square.add(*apple);
-
-}
-
-void Game::createnextpiece(SnakePiece next){
-	if(apple != NULL) {
-		switch(square.getchar(next.gety(), next.getx())) {
-			case '@':
-				destroyapple();
-				break;
-			case ' ': {
-				int emptyrow = snake.tail().gety();
-				int emptycol = snake.tail().getx();
-				square.add(Empty(emptyrow, emptycol));
-				snake.removepiece();
-				break;
-			}
-			default:            //kazdy inny przypadek to kolizja
-				m_gameover = true;
-				break;
-		}
-	}
-	square.add(next);
-	snake.addpiece(next);
-}
-
-void Game::destroyapple(){
-	delete apple;
-	apple = NULL;
-	m_score += 1;
-	if ((square.gettimeout() > 50))
-		square.changetimeout(square.gettimeout() - 10);
-	scoreboard.updatescore(m_score);
-}
-
-Game::Game(int height, int width, int hs, bool p, bool v) :m_highscore(hs){
+Game::Game(int height, int width, int hs) :m_highscore(hs){
 	square = Square(height, width);
 	int sbrow = square.getstartrow() + height;
 	int sbcol = square.getstartcol();
 	scoreboard = Scoreboard(width, sbrow, sbcol);
-	initialize(p, v);
+	initialize();
 }
 
-void Game::initialize(bool plus, bool vase){
+void Game::initialize(){
 	apple = NULL;
-	square.drawsquare();
 	scoreboard.initialize(m_score, m_highscore);
-
-	m_gameover = false;
-	m_exit = false;
-
 	srand(time(NULL));	//bez tego rand() nie jest losowy
-
+	
 	snake.setdirection(down);
-
 	createnextpiece(SnakePiece(2, 5));
 	for(int i=0; i<3; i++)
 		createnextpiece(snake.nexthead());
 	//levele
-	if(plus){
+	if(square.isplus()){
 		for(int i = 1; i!=8; i++)
 			square.addsign(7, 11 + i, '%');
 		for(int i = 1; i!=6; i++)
 			square.addsign(4 + i, 15, '%');
 	}
-	if(vase){
+	if(square.isvase()){
 		for(int i = 1; i!=7; i++)
 			square.addsign(3 + i, 7 + i, '%');
 		for(int i = 1; i!=7; i++)
@@ -139,6 +94,45 @@ void Game::redraw(){
 	scoreboard.refresh();
 }
 
-bool Game::isover()  {return m_gameover;}
-bool Game::isexit()  {return m_exit;}
-int Game::getscore() {return m_score;}
+void Game::createapple(){
+	int y, x;
+	square.getcoordinates(y, x);
+	apple = new Apple(y, x);
+	square.add(*apple);
+
+}
+
+void Game::createnextpiece(SnakePiece next){
+	if(apple != NULL) {
+		switch(square.getchar(next.gety(), next.getx())) {
+			case '@':
+				destroyapple();
+				break;
+			case ' ': {
+				int emptyrow = snake.tail().gety();
+				int emptycol = snake.tail().getx();
+				square.add(Empty(emptyrow, emptycol));
+				snake.removepiece();
+				break;
+			}
+			default:            //kazdy inny przypadek to kolizja
+				m_gameover = true;
+				break;
+		}
+	}
+	square.add(next);
+	snake.addpiece(next);
+}
+
+void Game::destroyapple(){
+	delete apple;
+	apple = NULL;
+	m_score += 1;
+	if ((square.gettimeout() > 50))
+		square.changetimeout(square.gettimeout() - 10);
+	scoreboard.updatescore(m_score);
+}
+
+bool Game::isover()       {return m_gameover;}
+bool Game::isexit()       {return m_exit;}
+int  Game::getscore()     {return m_score;}

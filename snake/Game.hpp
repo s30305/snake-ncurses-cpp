@@ -14,14 +14,14 @@ class Game{
 	Apple *apple;
 	Snake snake;
 	Scoreboard scoreboard;
-	bool m_gameover, m_exit;
+	bool m_gameover = false, m_exit = false;
 	int m_score = 0, m_highscore; 
 	void createapple();
 	void createnextpiece(SnakePiece next);
 	void destroyapple();
 public:
-	Game(int height, int width, int hs, bool p, bool v);
-	void initialize(bool plus, bool vase);
+	Game(int height, int width, int hs);
+	void initialize();
 	void useinput();
 	void update();
 	void redraw();
